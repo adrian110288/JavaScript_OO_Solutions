@@ -1,0 +1,98 @@
+<script type="text/javascript">
+
+	'use strict'
+
+	// ================================= Parent object ======================================
+
+	function Parent() {
+		// Parent constructor
+	}
+
+	Parent.prototype.functionCall = function() {
+	    console.log("callFunction from Parent");
+	}
+
+
+	// ================================  Child object =======================================
+
+	// Child object
+
+	function Child() {
+
+		// Calling "super" constructor
+		Parent.call(this);
+
+
+		// "Overriding" functionCall function inside constructor
+		this.functionCall = function () {
+
+			Parent.prototype.functionCall.call(this);
+
+			console.log("callFunction from Child");
+		}
+	}
+
+	Child.prototype = Object.create(Parent.prototype);
+
+	/* 
+	/* When above line is executed, it completely overrides Child's prototype 
+	/* (so Child.prototype.constructor === Parent and not Child) 
+	/* Therefore it is necessary to call this line below.
+	*/
+
+	Child.prototype.constructor = Child;
+
+	// "Overriding" functionCall function on the prototype
+	
+
+	// =======================================================================================
+
+	/*
+	/* Child's functionCall can be also declared on the prototype in Child class is to be 	/* extended (otherwise can be an instance property declared in the constructor)
+	/**/
+
+	Child.prototype.functionCall = function(){
+
+		// Calling "super"
+		Parent.prototype.functionCall.call(this);
+
+		console.log("callFunction from Child");
+	};
+	
+
+	// ======================================================================================
+
+	// ======================================================================================
+
+	/*
+	/* If inheritance is NOT intended, prototypes can be created through object literals
+	/**/
+
+	// Child.prototype = {
+
+	// 	constructor: Child,
+
+	// 	// property
+	// 	// property
+
+	// 	// function
+	// 	// function
+	// }
+
+	// ======================================================================================
+
+	// ===================================  Test ===========================================
+
+	var child = new Child();
+	child.functionCall();
+
+
+	// Returns 'true' because child object was created with a Child constructor
+	console.log(child instanceof Child);
+
+	// Less reliable than 'instanceof' because contructor can be overriden
+	console.log(child.constructor === Child);
+
+	// ======================================================================================
+	
+</script>
